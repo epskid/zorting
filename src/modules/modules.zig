@@ -4,6 +4,7 @@ pub const modules = struct {
     pub const bubble_sort = @import("bubble_sort.zig");
     pub const quick_sort = @import("quick_sort.zig");
     pub const bogo_sort = @import("bogo_sort.zig");
+    pub const selection_sort = @import("selection_sort.zig");
 };
 
 pub fn deinit(module_index: usize) void {

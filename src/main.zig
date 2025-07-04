@@ -10,8 +10,6 @@ pub fn main() !void {
     defer rl.closeWindow();
     rl.toggleFullscreen();
 
-    rl.setTargetFPS(60);
-
     var algorithm: i32 = 0;
     var changing_algorithm = false;
     var prev_running = false;
