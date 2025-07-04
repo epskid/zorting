@@ -1,5 +1,7 @@
 const max_array_capacity: usize = 1000;
 
+var prng = std.Random.DefaultPrng.init(0xDEADBEEF);
+
 pub const Array = struct {
     const Self = @This();
 
@@ -45,9 +47,8 @@ pub const Array = struct {
     }
 
     pub fn shuffle(self: *Self) void {
-        var prng = std.Random.DefaultPrng.init(0xDEADBEEF);
-        const rand = prng.random();
-        rand.shuffle(u32, self.inner[0..self.len]);
+        const random = prng.random();
+        random.shuffle(u32, self.inner[0..self.len]);
     }
 
     pub fn ascending(self: *Self) void {
