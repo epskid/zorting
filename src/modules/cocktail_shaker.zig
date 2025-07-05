@@ -33,7 +33,6 @@ pub fn step(arr: *array.Array) bool {
         swapped = true;
         arr.swap(index, index + 1);
     }
-
     arr.comparisons += 1;
 
     if (!backwards) {

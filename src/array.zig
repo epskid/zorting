@@ -1,6 +1,6 @@
 const max_array_capacity: usize = 2000;
 
-var prng = std.Random.DefaultPrng.init(0xDEADBEEF);
+var prng = std.Random.DefaultPrng.init(4); // chosen by fair dice roll; guaranteed to be random (https://xkcd.com/221/)
 
 pub const Array = struct {
     const Self = @This();
@@ -66,6 +66,16 @@ pub const Array = struct {
         self.accesses += 1;
         self.colors[idx] = .red;
         return self.inner[idx];
+    }
+
+    pub fn set(self: *Self, idx: usize, value: u32) void {
+        if (idx >= self.len) {
+            std.builtin.panic.outOfBounds(idx, self.len);
+        }
+
+        self.accesses += 1;
+        self.colors[idx] = .red;
+        self.inner[idx] = value;
     }
 
     pub fn swap(self: *Self, idx1: usize, idx2: usize) void {

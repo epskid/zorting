@@ -3,12 +3,23 @@ const array = @import("../array.zig");
 pub var needs_deinit = false;
 
 pub const modules = struct {
+    // bubblelikes
     pub const bubble = @import("bubble.zig");
     pub const cocktail_shaker = @import("cocktail_shaker.zig");
-    pub const quicksort = @import("quicksort.zig");
-    pub const bogo = @import("bogo.zig");
+
+    // quicksort
+    pub const quick = @import("quick.zig");
+
+    // selection sort
     pub const selection = @import("selection.zig");
+
+    // insertionlikes
+    pub const insertion = @import("insertion.zig");
     pub const gnome = @import("gnome.zig");
+    pub const shell = @import("shell.zig");
+
+    // evil hell section for evil algorithms
+    pub const bogo = @import("bogo.zig");
 };
 
 pub fn init(module_index: usize, arr: *const array.Array) !void {
