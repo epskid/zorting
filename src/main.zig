@@ -11,13 +11,15 @@ pub fn main() !void {
     rl.toggleFullscreen();
 
     rg.loadStyle("style_dark.rgs");
+    rg.setStyle(.dropdownbox, .{ .control = .text_alignment }, @intFromEnum(rg.TextAlignment.left));
+    rg.setStyle(.dropdownbox, .{ .control = .text_padding }, 5);
 
     var algorithm: i32 = 0;
     var changing_algorithm = false;
     var running = false;
     var arr: array.Array = array.Array.init(10);
     var sleep_micros: f32 = 1;
-    var elements: f32 = 1;
+    var size: f32 = 1;
     var timer = try std.time.Timer.start();
 
     defer if (modules.needs_deinit) {
@@ -51,12 +53,12 @@ pub fn main() !void {
             rg.lock();
         }
 
-        if (rg.dropdownBox(.{ .width = 120, .height = 30, .x = 10, .y = 10 }, algorithms.selection_string, &algorithm, changing_algorithm) != 0) {
+        if (rg.dropdownBox(.{ .width = 135, .height = 30, .x = 10, .y = 10 }, algorithms.selection_string, &algorithm, changing_algorithm) != 0) {
             changing_algorithm = !changing_algorithm;
         }
 
-        if (rg.slider(.{ .width = 150, .height = 30, .x = 170, .y = 10 }, "size", rl.textFormat("%i", .{@as(i32, @intFromFloat(elements)) * 10}), &elements, 1, 100) != 0) {
-            arr.len = @intFromFloat(elements);
+        if (rg.slider(.{ .width = 150, .height = 30, .x = 185, .y = 10 }, "size", rl.textFormat("%i", .{@as(i32, @intFromFloat(size)) * 10}), &size, 1, 200) != 0) {
+            arr.len = @intFromFloat(size);
             arr.len *= 10;
             arr.ascending();
             arr.resetColors();

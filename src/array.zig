@@ -1,4 +1,4 @@
-const max_array_capacity: usize = 1000;
+const max_array_capacity: usize = 2000;
 
 var prng = std.Random.DefaultPrng.init(0xDEADBEEF);
 
