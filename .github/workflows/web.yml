@@ -5,6 +5,10 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
+env:
+  EM_VERSION: latest
+  EM_CACHE_FOLDER: 'emsdk-cache'
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,10 +17,16 @@ jobs:
       - uses: mlugg/setup-zig@v2
         with:
           version: 0.14.1
+      - name: setup cache
+        id: cache-system-libraries
+        uses: actions/cache@v2
+        with:
+          path: ${{env.EM_CACHE_FOLDER}}
+          key: ${{env.EM_VERSION}}-${{ runner.os }}
       - uses: mymindstorm/setup-emsdk@v14
         with:
-          version: latest
-          actions-cache-folder: 'emsdk-cache'
+          version: ${{env.EM_VERSION}}
+          actions-cache-folder: ${{env.EM_CACHE_FOLDER}}
       - name: compile with emsdk
         id: build
         run: zig build -Dtarget=wasm32-emscripten --sysroot emsdk-cache/upstream/emscripten/
