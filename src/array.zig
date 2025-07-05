@@ -13,12 +13,13 @@ pub const Array = struct {
     accesses: usize,
 
     pub fn init(len: usize) Self {
-        var self: Self = undefined;
-        self.len = len;
-        self.resetColors();
-        self.resetCounters();
-
-        return self;
+        return .{
+            .colors = [_]rl.Color{.white} ** max_array_capacity,
+            .inner = [_]u32{0} ** max_array_capacity,
+            .len = len,
+            .comparisons = 0,
+            .accesses = 0,
+        };
     }
 
     pub fn resetColors(self: *Self) void {

@@ -20,9 +20,10 @@ const modules = struct {
     pub const bogo = @import("bogo.zig");
 };
 
+const decls = @typeInfo(modules).@"struct".decls;
+
 pub const selection_string = blk: {
     var s: [:0]const u8 = "";
-    const decls = @typeInfo(modules).@"struct".decls;
     for (decls, 0..) |decl, idx| {
         s = s ++ decl.name;
         if (idx < decls.len - 1) {
@@ -33,35 +34,48 @@ pub const selection_string = blk: {
     break :blk s;
 };
 
-pub var needs_deinit = false;
+var working_on: ?i32 = null;
 
-pub fn init(module_index: usize, arr: *const array.Array) !void {
-    needs_deinit = true;
-    inline for (@typeInfo(modules).@"struct".decls, 0..) |decl, idx| {
+pub fn init(module_index: i32, arr: *const array.Array) !void {
+    deinit();
+    inline for (decls, 0..) |decl, idx| {
         if (idx == module_index) {
             const module = @field(modules, decl.name);
             try module.init(arr);
         }
     }
+
+    if (module_index >= decls.len) {
+        @panic("module out of bounds");
+    }
+
+    working_on = module_index;
 }
 
-pub fn deinit(module_index: usize) void {
-    needs_deinit = false;
-    inline for (@typeInfo(modules).@"struct".decls, 0..) |decl, idx| {
-        if (idx == module_index) {
-            const module = @field(modules, decl.name);
-            module.deinit();
+pub fn deinit() void {
+    if (working_on) |module_index| {
+        inline for (decls, 0..) |decl, idx| {
+            if (idx == module_index) {
+                const module = @field(modules, decl.name);
+                module.deinit();
+            }
         }
+
+        working_on = null;
     }
 }
 
-pub fn step(module_index: usize, arr: *array.Array) bool {
-    inline for (@typeInfo(modules).@"struct".decls, 0..) |decl, idx| {
-        if (idx == module_index) {
-            const module = @field(modules, decl.name);
-            return module.step(arr);
+pub fn step(arr: *array.Array) bool {
+    if (working_on) |module_index| {
+        inline for (decls, 0..) |decl, idx| {
+            if (idx == module_index) {
+                const module = @field(modules, decl.name);
+                const done = module.step(arr);
+                if (done) deinit();
+                return done;
+            }
         }
+        unreachable;
     }
-
-    unreachable;
+    @panic("tried to step without module");
 }
