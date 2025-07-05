@@ -13,13 +13,16 @@ pub const Array = struct {
     accesses: usize,
 
     pub fn init(len: usize) Self {
-        return .{
+        var self: Self = .{
             .colors = [_]rl.Color{.white} ** max_array_capacity,
             .inner = [_]u32{0} ** max_array_capacity,
             .len = len,
             .comparisons = 0,
             .accesses = 0,
         };
+        self.ascending();
+
+        return self;
     }
 
     pub fn resetColors(self: *Self) void {
