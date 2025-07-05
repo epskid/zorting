@@ -72,10 +72,12 @@ pub fn step(arr: *array.Array) bool {
             .left = pivot + 1,
             .right = hi,
         }) catch unreachable;
-        stack.append(.{
-            .left = lo,
-            .right = pivot - 1,
-        }) catch unreachable;
+        if (pivot != 0) {
+            stack.append(.{
+                .left = lo,
+                .right = pivot - 1,
+            }) catch unreachable;
+        }
     }
 
     return false;
