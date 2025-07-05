@@ -67,15 +67,6 @@ pub const Array = struct {
         return self.inner[idx];
     }
 
-    pub fn set(self: *Self, idx: usize, elem: u32) void {
-        if (idx >= self.len) {
-            std.builtin.panic.outOfBounds(idx, self.len);
-        }
-
-        self.colors[idx] = .red;
-        self.inner[idx] = elem;
-    }
-
     pub fn swap(self: *Self, idx1: usize, idx2: usize) void {
         self.colors[idx1] = .red;
         self.colors[idx2] = .red;

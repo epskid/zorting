@@ -1,10 +1,12 @@
 const array = @import("../array.zig");
 
 pub const modules = struct {
-    pub const bubble_sort = @import("bubble_sort.zig");
-    pub const quick_sort = @import("quick_sort.zig");
-    pub const bogo_sort = @import("bogo_sort.zig");
-    pub const selection_sort = @import("selection_sort.zig");
+    pub const bubble = @import("bubble.zig");
+    pub const cocktail_shaker = @import("cocktail_shaker.zig");
+    pub const quicksort = @import("quicksort.zig");
+    pub const bogo = @import("bogo.zig");
+    pub const selection = @import("selection.zig");
+    pub const gnome = @import("gnome.zig");
 };
 
 pub fn deinit(module_index: usize) void {
