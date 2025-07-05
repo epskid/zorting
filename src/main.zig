@@ -9,7 +9,7 @@ pub fn main() !void {
     defer rl.closeWindow();
     rl.toggleFullscreen();
 
-    rg.loadStyle("style_dark.rgs");
+    rg.loadStyle("resources/style_dark.rgs");
     rg.setStyle(.dropdownbox, .{ .control = .text_alignment }, @intFromEnum(rg.TextAlignment.left));
     rg.setStyle(.dropdownbox, .{ .control = .text_padding }, 5);
 
