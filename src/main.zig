@@ -45,39 +45,44 @@ pub fn main() !void {
 
         arr.draw();
 
-        if (running) {
-            rg.unlock();
-        }
-        _ = rg.slider(.{ .width = 500, .height = 30, .x = 75, .y = 50 }, "min delay", rl.textFormat("%i", .{@as(i32, @intFromFloat(sleep_micros))}), &sleep_micros, 0, 100000);
-        if (running) {
-            rg.lock();
-        }
+        if (!running or (rl.getMouseX() < 630 and rl.getMouseY() < 130)) {
+            rl.drawRectangle(0, 0, 630, 130, .dark_gray);
+            rl.drawText(rl.textFormat("comparisons: %i\narray accesses: %i", .{ arr.comparisons, arr.accesses }), 10, 85, 16, .white);
 
-        if (rg.dropdownBox(.{ .width = 135, .height = 30, .x = 10, .y = 10 }, algorithms.selection_string, &algorithm, changing_algorithm) != 0) {
-            changing_algorithm = !changing_algorithm;
-        }
+            if (running) {
+                rg.unlock();
+            }
+            _ = rg.slider(.{ .width = 500, .height = 30, .x = 75, .y = 50 }, "min delay", rl.textFormat("%i", .{@as(i32, @intFromFloat(sleep_micros))}), &sleep_micros, 0, 100000);
+            if (running) {
+                rg.lock();
+            }
 
-        if (rg.slider(.{ .width = 150, .height = 30, .x = 185, .y = 10 }, "size", rl.textFormat("%i", .{@as(i32, @intFromFloat(size)) * 10}), &size, 1, 200) != 0) {
-            arr.len = @intFromFloat(size);
-            arr.len *= 10;
-            arr.ascending();
-            arr.resetColors();
-        }
-        if (rg.button(.{ .width = 120, .height = 30, .x = 370, .y = 10 }, "shuffle")) {
-            arr.shuffle();
-        }
-        if (!running) {
-            if (rg.button(.{ .width = 120, .height = 30, .x = 500, .y = 10 }, "start")) {
-                running = true;
-                try modules.init(@intCast(algorithm), &arr);
-                arr.resetCounters();
+            if (rg.dropdownBox(.{ .width = 135, .height = 30, .x = 10, .y = 10 }, algorithms.selection_string, &algorithm, changing_algorithm) != 0) {
+                changing_algorithm = !changing_algorithm;
             }
-        } else {
-            rg.unlock();
-            if (rg.button(.{ .width = 120, .height = 30, .x = 500, .y = 10 }, "stop")) {
-                running = false;
+
+            if (rg.slider(.{ .width = 150, .height = 30, .x = 185, .y = 10 }, "size", rl.textFormat("%i", .{@as(i32, @intFromFloat(size)) * 10}), &size, 1, 200) != 0) {
+                arr.len = @intFromFloat(size);
+                arr.len *= 10;
+                arr.ascending();
+                arr.resetColors();
             }
-            rg.lock();
+            if (rg.button(.{ .width = 120, .height = 30, .x = 370, .y = 10 }, "shuffle")) {
+                arr.shuffle();
+            }
+            if (!running) {
+                if (rg.button(.{ .width = 120, .height = 30, .x = 500, .y = 10 }, "start")) {
+                    running = true;
+                    try modules.init(@intCast(algorithm), &arr);
+                    arr.resetCounters();
+                }
+            } else {
+                rg.unlock();
+                if (rg.button(.{ .width = 120, .height = 30, .x = 500, .y = 10 }, "stop")) {
+                    running = false;
+                }
+                rg.lock();
+            }
         }
 
         if (!running and modules.needs_deinit) {
