@@ -1,8 +1,8 @@
 const array = @import("array.zig");
 const modules = @import("modules/modules.zig");
 
-const ui_width = 630;
-const ui_height = 130;
+const ui_width = 645;
+const ui_height = 90;
 
 pub const App = struct {
     const Self = @This();
@@ -44,8 +44,8 @@ pub const App = struct {
 
             rl.drawRectangle(0, 0, ui_width, ui_height, .dark_gray);
             self.drawArrayStats();
-            self.updateDelaySlider();
             self.updateAlgorithmTypeDropdown();
+            self.updateDelaySlider();
             self.updateArraySizeSlider();
             self.updateShuffleButton();
             try self.updateStartStopButtons();
@@ -80,8 +80,8 @@ pub const App = struct {
     }
 
     inline fn drawArrayStats(self: *const Self) void {
-        const text = rl.textFormat("comparisons: %i\narray accesses: %i", .{ self.arr.comparisons, self.arr.accesses });
-        rl.drawText(text, 10, 85, 16, .white);
+        const text = rl.textFormat("comparisons: %i\naccesses: %i", .{ self.arr.comparisons, self.arr.accesses });
+        rl.drawText(text, 10, 50, 14, .white);
     }
 
     inline fn updateDelaySlider(self: *Self) void {
@@ -89,13 +89,13 @@ pub const App = struct {
         defer self.endUsableWhileSorting();
 
         const bounds: rl.Rectangle = .{
-            .x = 75,
+            .x = 190,
             .y = 50,
-            .width = 500,
+            .width = 270,
             .height = 30,
         };
         const delay_display = rl.textFormat("%i", .{@as(i32, @intFromFloat(self.delay_microseconds))});
-        _ = rg.slider(bounds, "min delay", delay_display, &self.delay_microseconds, 0, 100000);
+        _ = rg.sliderBar(bounds, "delay", delay_display, &self.delay_microseconds, 0, 100000);
     }
 
     fn updateAlgorithmTypeDropdown(self: *Self) void {
@@ -120,12 +120,12 @@ pub const App = struct {
         };
 
         const bounds: rl.Rectangle = .{
-            .x = 185,
+            .x = 190,
             .y = 10,
-            .width = 150,
+            .width = 270,
             .height = 30,
         };
-        if (rg.slider(bounds, "size", rl.textFormat("%i", .{self.arr.len}), &static.sizeInput, 1, 200) != 0) {
+        if (rg.sliderBar(bounds, "size", rl.textFormat("%i", .{self.arr.len}), &static.sizeInput, 1, 200) != 0) {
             self.arr.len = @intFromFloat(static.sizeInput);
             self.arr.len *= 10;
 
@@ -136,20 +136,21 @@ pub const App = struct {
 
     inline fn updateShuffleButton(self: *Self) void {
         const bounds: rl.Rectangle = .{
-            .x = 370,
+            .x = 515,
             .y = 10,
             .width = 120,
             .height = 30,
         };
         if (rg.button(bounds, "shuffle")) {
             self.arr.shuffle();
+            self.arr.resetColors();
         }
     }
 
     inline fn updateStartButton(self: *Self) !void {
         const bounds: rl.Rectangle = .{
-            .x = 500,
-            .y = 10,
+            .x = 515,
+            .y = 50,
             .width = 120,
             .height = 30,
         };
@@ -165,8 +166,8 @@ pub const App = struct {
         defer self.endUsableWhileSorting();
 
         const bounds: rl.Rectangle = .{
-            .x = 500,
-            .y = 10,
+            .x = 515,
+            .y = 50,
             .width = 120,
             .height = 30,
         };

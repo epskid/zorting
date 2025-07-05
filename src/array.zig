@@ -48,7 +48,7 @@ pub const Array = struct {
             rl.drawRectangle(@intFromFloat(x), rl.getScreenHeight() - height, @intFromFloat(@ceil(width_scale)), height, self.colors[i]);
         }
 
-        rl.drawText(rl.textFormat("comparisons: %i\narray accesses: %i\n(hover for options)", .{ self.comparisons, self.accesses }), 10, 10, 16, .gray);
+        rl.drawText(rl.textFormat("comparisons: %i\naccesses: %i\n(hover for options)", .{ self.comparisons, self.accesses }), 10, 10, 16, .gray);
     }
 
     pub fn shuffle(self: *Self) void {
