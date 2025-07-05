@@ -1,6 +1,12 @@
 # zorting
 you know those sorting algorithm visualizations on youtube? this is just that but worse.
 
+<details>
+<summary>demo (gif compressed into oblivion)</summary>
+<br>
+<img src="./demo.gif">
+</details>
+
 ## the code
 ```c
 // TODO: fix the code
