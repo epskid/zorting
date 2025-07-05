@@ -2,8 +2,7 @@
 you know those sorting algorithm visualizations on youtube? this is just that but worse.
 
 <details>
-<summary>demo (gif compressed into oblivion)</summary>
-<br>
+<summary>demo (compressed into oblivion)</summary>
 <img src="./demo.gif" width=100%>
 </details>
 
