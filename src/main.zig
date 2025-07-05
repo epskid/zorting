@@ -10,14 +10,19 @@ pub fn main() !void {
     defer rl.closeWindow();
     rl.toggleFullscreen();
 
+    rg.loadStyle("style_dark.rgs");
+
     var algorithm: i32 = 0;
     var changing_algorithm = false;
-    var prev_running = false;
     var running = false;
     var arr: array.Array = array.Array.init(10);
     var sleep_micros: f32 = 1;
     var elements: f32 = 1;
     var timer = try std.time.Timer.start();
+
+    defer if (modules.needs_deinit) {
+        modules.deinit(@intCast(algorithm));
+    };
 
     arr.ascending();
 
@@ -26,7 +31,6 @@ pub fn main() !void {
         defer rl.endDrawing();
         rl.clearBackground(.black);
 
-        prev_running = running;
         if (running) {
             if (@divTrunc(timer.read(), 1000) >= @as(u64, @intFromFloat(sleep_micros))) {
                 arr.resetColors();
@@ -39,43 +43,43 @@ pub fn main() !void {
 
         arr.draw();
 
-        if (rg.dropdownBox(.{ .width = 120, .height = 30, .x = 10, .y = 10 }, algorithms.selection_string, &algorithm, changing_algorithm) != 0) {
-            changing_algorithm = !changing_algorithm;
-        }
-
         if (running) {
             rg.unlock();
         }
-        _ = rg.slider(.{ .width = 130, .height = 30, .x = 190, .y = 10 }, "min delay", rl.textFormat("%i", .{@as(i32, @intFromFloat(sleep_micros))}), &sleep_micros, 0, 100000);
+        _ = rg.slider(.{ .width = 500, .height = 30, .x = 75, .y = 50 }, "min delay", rl.textFormat("%i", .{@as(i32, @intFromFloat(sleep_micros))}), &sleep_micros, 0, 100000);
         if (running) {
             rg.lock();
         }
 
-        if (rg.slider(.{ .width = 150, .height = 30, .x = 415, .y = 10 }, "elements", rl.textFormat("%i", .{@as(i32, @intFromFloat(elements)) * 10}), &elements, 1, 100) != 0) {
+        if (rg.dropdownBox(.{ .width = 120, .height = 30, .x = 10, .y = 10 }, algorithms.selection_string, &algorithm, changing_algorithm) != 0) {
+            changing_algorithm = !changing_algorithm;
+        }
+
+        if (rg.slider(.{ .width = 150, .height = 30, .x = 170, .y = 10 }, "size", rl.textFormat("%i", .{@as(i32, @intFromFloat(elements)) * 10}), &elements, 1, 100) != 0) {
             arr.len = @intFromFloat(elements);
             arr.len *= 10;
             arr.ascending();
+            arr.resetColors();
         }
-        if (rg.button(.{ .width = 120, .height = 30, .x = 600, .y = 10 }, "shuffle")) {
+        if (rg.button(.{ .width = 120, .height = 30, .x = 370, .y = 10 }, "shuffle")) {
             arr.shuffle();
         }
         if (!running) {
-            if (rg.button(.{ .width = 120, .height = 30, .x = 730, .y = 10 }, "start")) {
+            if (rg.button(.{ .width = 120, .height = 30, .x = 500, .y = 10 }, "start")) {
                 running = true;
                 try modules.init(@intCast(algorithm), &arr);
                 arr.resetCounters();
             }
         } else {
             rg.unlock();
-            if (rg.button(.{ .width = 120, .height = 30, .x = 730, .y = 10 }, "stop")) {
+            if (rg.button(.{ .width = 120, .height = 30, .x = 500, .y = 10 }, "stop")) {
                 running = false;
             }
             rg.lock();
         }
 
-        if (prev_running and !running) {
+        if (!running and modules.needs_deinit) {
             modules.deinit(@intCast(algorithm));
-            arr.resetColors();
         }
     }
 }
