@@ -1,8 +1,6 @@
 const array = @import("../array.zig");
 
-pub var needs_deinit = false;
-
-pub const modules = struct {
+const modules = struct {
     // bubblelikes
     pub const bubble = @import("bubble.zig");
     pub const cocktail_shaker = @import("cocktail_shaker.zig");
@@ -21,6 +19,21 @@ pub const modules = struct {
     // evil hell section for evil algorithms
     pub const bogo = @import("bogo.zig");
 };
+
+pub const selection_string = blk: {
+    var s: [:0]const u8 = "";
+    const decls = @typeInfo(modules).@"struct".decls;
+    for (decls, 0..) |decl, idx| {
+        s = s ++ decl.name;
+        if (idx < decls.len - 1) {
+            s = s ++ ";";
+        }
+    }
+
+    break :blk s;
+};
+
+pub var needs_deinit = false;
 
 pub fn init(module_index: usize, arr: *const array.Array) !void {
     needs_deinit = true;

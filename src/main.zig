@@ -1,5 +1,4 @@
 const modules = @import("modules/modules.zig");
-const algorithms = @import("algorithms.zig");
 const array = @import("array.zig");
 
 pub fn main() !void {
@@ -57,7 +56,7 @@ pub fn main() !void {
                 rg.lock();
             }
 
-            if (rg.dropdownBox(.{ .width = 135, .height = 30, .x = 10, .y = 10 }, algorithms.selection_string, &algorithm, changing_algorithm) != 0) {
+            if (rg.dropdownBox(.{ .width = 135, .height = 30, .x = 10, .y = 10 }, modules.selection_string, &algorithm, changing_algorithm) != 0) {
                 changing_algorithm = !changing_algorithm;
             }
 
