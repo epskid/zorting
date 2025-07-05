@@ -4,7 +4,7 @@ you know those sorting algorithm visualizations on youtube? this is just that bu
 <details>
 <summary>demo (gif compressed into oblivion)</summary>
 <br>
-<img src="./demo.gif">
+<img src="./demo.gif" width=100%>
 </details>
 
 ## the code
