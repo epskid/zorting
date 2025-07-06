@@ -12,6 +12,7 @@
 
             #canvas {
                 border: 0px none;
+                image-rendering: pixelated; image-rendering: crisp-edges;
             }
 
             #clickwall {
@@ -48,6 +49,14 @@
                 script.async = true;
                 document.body.appendChild(script);
             }
+
+            // https://github.com/emscripten-core/emscripten/issues/6764#issuecomment-401973958
+            var canvasElement = document.getElementById('canvas');
+            var originalCanvasGetContext = canvasElement.getContext;
+            canvasElement.getContext = function(contextType, contextAttributes) {
+                if (contextAttributes) contextAttributes.imageSmoothingEnabled = false;
+                return originalCanvasGetContext.call(this, contextType, contextAttributes);
+            };
 
             var Module = {
                 canvas: (() => {
