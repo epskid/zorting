@@ -4,7 +4,7 @@ const std = @import("std");
 const builtin = @import("builtin");
 
 const emccOutputDir = "zig-out" ++ std.fs.path.sep_str ++ "htmlout" ++ std.fs.path.sep_str;
-const emccOutputFile = "index.html";
+const emccOutputFile = "index.js";
 pub fn emscriptenRunStep(b: *std.Build) !*std.Build.Step.Run {
     // If compiling on windows , use emrun.bat.
     const emrunExe = switch (builtin.os.tag) {
@@ -109,7 +109,7 @@ pub fn linkWithEmscripten(
         emcc_command.addFileArg(item.getEmittedBin());
         emcc_command.step.dependOn(&item.step);
     }
-    // This puts the file in zig-out/htmlout/index.html.
+    // This puts the file in zig-out/htmlout/index.js.
     emcc_command.step.dependOn(&mkdir_command.step);
     emcc_command.addArgs(&[_][]const u8{
         "-o",

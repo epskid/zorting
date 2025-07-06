@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+        <title>ZORTING</title>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            #canvas {
+                border: 0px none;
+            }
+
+            #clickwall {
+                position: absolute;
+                width: 100vw;
+                height: 100vh;
+                background: black;
+                z-index: 1000;
+            }
+
+            #clickwall>p {
+                font-family: monospace;
+                position: absolute;
+                color: white;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 50%;
+                height: 50%;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="clickwall" onclick="loadIndex(); document.body.removeChild(this)"><p>[click anywhere to begin]</p></div>
+        <canvas
+            class="emscripten"
+            id="canvas"
+            oncontextmenu="event.preventDefault()"
+            tabindex="-1"
+        ></canvas>
+        <script>
+            function loadIndex() {
+                const script = document.createElement("script");
+                script.src = "./index.js";
+                script.async = true;
+                document.body.appendChild(script);
+            }
+
+            let inited = false;
+
+            document.addEventListener("click", () => {
+                const interval = setInterval(() => {
+                    if (inited) {
+                        Module.requestFullscreen(false, false);
+                        clearInterval(interval);
+                    }
+                }, 0);
+            });
+
+            var Module = {
+                canvas: (() => {
+                    var e = document.getElementById("canvas");
+                    return (
+                        e.addEventListener(
+                            "webglcontextlost",
+                            (e) => {
+                                alert(
+                                    "WebGL context lost. You will need to reload the page.",
+                                ),
+                                    e.preventDefault();
+                            },
+                            !1,
+                        ),
+                        e
+                    );
+                })(),
+                totalDependencies: 0,
+                onRuntimeInitialized: () => { inited = true; }
+            };
+        </script>
+    </body>
+</html>
