@@ -7,7 +7,7 @@ pub fn main() !void {
 
     rl.initWindow(width, height, "ZORTING");
     defer rl.closeWindow();
-    rl.toggleFullscreen();
+    if (builtin.os.tag != .wasi and builtin.os.tag != .emscripten) rl.toggleFullscreen();
 
     rg.loadStyle("resources/style_dark.rgs");
     rg.setStyle(.dropdownbox, .{ .control = .text_alignment }, @intFromEnum(rg.TextAlignment.left));
@@ -22,5 +22,6 @@ pub fn main() !void {
 }
 
 const std = @import("std");
+const builtin = @import("builtin");
 const rl = @import("raylib");
 const rg = @import("raygui");

@@ -1,12 +1,12 @@
-const max_array_capacity: usize = 2000;
+pub const max_capacity: usize = if (builtin.os.tag != .wasi and builtin.os.tag != .emscripten) 2000 else 1000;
 
 var prng = std.Random.DefaultPrng.init(4); // chosen by fair dice roll; guaranteed to be random (https://xkcd.com/221/)
 
 pub const Array = struct {
     const Self = @This();
 
-    colors: [max_array_capacity]rl.Color,
-    inner: [max_array_capacity]u32,
+    colors: [max_capacity]rl.Color,
+    inner: [max_capacity]u32,
     len: usize,
 
     comparisons: usize,
@@ -14,8 +14,8 @@ pub const Array = struct {
 
     pub fn init(len: usize) Self {
         var self: Self = .{
-            .colors = [_]rl.Color{.white} ** max_array_capacity,
-            .inner = [_]u32{0} ** max_array_capacity,
+            .colors = [_]rl.Color{.white} ** max_capacity,
+            .inner = [_]u32{0} ** max_capacity,
             .len = len,
             .comparisons = 0,
             .accesses = 0,
@@ -93,4 +93,5 @@ pub const Array = struct {
 };
 
 const std = @import("std");
+const builtin = @import("builtin");
 const rl = @import("raylib");

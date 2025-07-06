@@ -27,7 +27,7 @@ jobs:
           actions-cache-folder: ${{env.EM_CACHE_FOLDER}}
       - name: compile with emsdk
         id: build
-        run: zig build -Dtarget=wasm32-emscripten --sysroot emsdk-cache/emsdk-main/upstream/emscripten
+        run: zig build --release=fast -Dtarget=wasm32-emscripten --sysroot emsdk-cache/emsdk-main/upstream/emscripten
       - name: upload static files
         id: deployment
         uses: actions/upload-pages-artifact@v3

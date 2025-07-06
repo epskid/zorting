@@ -10,7 +10,7 @@ var i: ?usize = null;
 var j: usize = 0;
 
 pub fn init(arr: *const array.Array) !void {
-    stack = try std.ArrayList(LRPair).initCapacity(std.heap.page_allocator, arr.len);
+    stack = try std.ArrayList(LRPair).initCapacity(std.heap.c_allocator, arr.len);
     try stack.append(.{ .left = 0, .right = arr.len - 1 });
     i = null;
     j = 0;

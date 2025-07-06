@@ -125,7 +125,7 @@ pub const App = struct {
             .width = 270,
             .height = 30,
         };
-        if (rg.sliderBar(bounds, "size", rl.textFormat("%i", .{self.arr.len}), &static.sizeInput, 1, 200) != 0) {
+        if (rg.sliderBar(bounds, "size", rl.textFormat("%i", .{self.arr.len}), &static.sizeInput, 1, @as(f32, @floatFromInt(array.max_capacity)) / 10) != 0) {
             self.arr.len = @intFromFloat(static.sizeInput);
             self.arr.len *= 10;
 
