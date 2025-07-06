@@ -8,7 +8,7 @@ pub fn main() !void {
 
     const monitor = rl.getCurrentMonitor();
     rl.setWindowSize(rl.getMonitorWidth(monitor), rl.getMonitorHeight(monitor));
-    if (builtin.os.tag != .wasi and builtin.os.tag != .emscripten) rl.toggleFullscreen();
+    rl.toggleFullscreen();
 
     rg.loadStyle("resources/style_dark.rgs");
     rg.setStyle(.dropdownbox, .{ .control = .text_alignment }, @intFromEnum(rg.TextAlignment.left));
@@ -17,8 +17,13 @@ pub fn main() !void {
     var zorting = try app.App.init();
     defer modules.deinit();
 
-    while (!rl.windowShouldClose()) {
-        try zorting.update();
+    if (builtin.os.tag != .wasi and builtin.os.tag != .emscripten) {
+        while (!rl.windowShouldClose()) {
+            try zorting.update();
+        }
+    } else {
+        const emscripten = std.os.emscripten;
+        emscripten.emscripten_set_main_loop_arg(&app.App.updateEmscripten, &zorting, 0, 1);
     }
 }
 

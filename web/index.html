@@ -49,17 +49,6 @@
                 document.body.appendChild(script);
             }
 
-            let inited = false;
-
-            document.addEventListener("click", () => {
-                const interval = setInterval(() => {
-                    if (inited) {
-                        Module.requestFullscreen(false, false);
-                        clearInterval(interval);
-                    }
-                }, 0);
-            });
-
             var Module = {
                 canvas: (() => {
                     var e = document.getElementById("canvas");
@@ -78,7 +67,9 @@
                     );
                 })(),
                 totalDependencies: 0,
-                onRuntimeInitialized: () => { inited = true; }
+                onRuntimeInitialized: document.getElementById("canvas").addEventListener("click", () => {
+                    Module.requestFullscreen(false, false)
+                })
             };
         </script>
     </body>

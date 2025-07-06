@@ -23,6 +23,11 @@ pub const App = struct {
         };
     }
 
+    pub fn updateEmscripten(self_opaque: ?*anyopaque) callconv(.C) void {
+        var self = @as(*Self, @ptrCast(@alignCast(self_opaque.?)));
+        self.update() catch {};
+    }
+
     pub fn update(self: *Self) !void {
         rl.beginDrawing();
         defer rl.endDrawing();
