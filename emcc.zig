@@ -115,7 +115,7 @@ pub fn linkWithEmscripten(
         "-o",
         emccOutputDir ++ emccOutputFile,
         "-sUSE_OFFSET_CONVERTER",
-        "-sALLOW_MEMORY_GROWTH"
+        "-sALLOW_MEMORY_GROWTH",
         "-sFULL-ES3=1",
         "-sUSE_GLFW=3",
         "-sASYNCIFY",
