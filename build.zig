@@ -35,10 +35,6 @@ pub fn build(b: *std.Build) !void {
             .install_subdir = ""
         });
 
-        const run_step = try emcc.emscriptenRunStep(b);
-        run_step.step.dependOn(&link_step.step);
-        const run_option = b.step("run", "Run 'zorting'");
-        run_option.dependOn(&run_step.step);
         return;
     }
 

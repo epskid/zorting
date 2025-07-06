@@ -1,6 +1,10 @@
 name: build and deploy to github pages
 
 on:
+  push:
+    paths:
+      - src/**
+      - web/**
   workflow_dispatch:
 
 env:

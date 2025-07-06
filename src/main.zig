@@ -2,11 +2,12 @@ const modules = @import("modules/modules.zig");
 const app = @import("app.zig");
 
 pub fn main() !void {
-    const width = 1920;
-    const height = 1080;
-
-    rl.initWindow(width, height, "ZORTING");
+    rl.setConfigFlags(.{ .window_resizable = true });
+    rl.initWindow(640, 480, "ZORTING");
     defer rl.closeWindow();
+
+    const monitor = rl.getCurrentMonitor();
+    rl.setWindowSize(rl.getMonitorWidth(monitor), rl.getMonitorHeight(monitor));
     if (builtin.os.tag != .wasi and builtin.os.tag != .emscripten) rl.toggleFullscreen();
 
     rg.loadStyle("resources/style_dark.rgs");
