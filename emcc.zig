@@ -116,11 +116,13 @@ pub fn linkWithEmscripten(
         emccOutputDir ++ emccOutputFile,
         "-sUSE_OFFSET_CONVERTER",
         "-sALLOW_MEMORY_GROWTH",
+        "-sMALLOC=emmalloc",
         "-sFULL-ES3=1",
         "-sUSE_GLFW=3",
-        "-sASYNCIFY",
+        "-sEVAL_CTORS",
         "-O3",
         "-fsanitize=undefined",
+        "-flto",
     });
     return emcc_command;
 }

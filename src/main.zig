@@ -6,9 +6,18 @@ pub fn main() !void {
     rl.initWindow(640, 480, "ZORTING");
     defer rl.closeWindow();
 
-    const monitor = rl.getCurrentMonitor();
-    rl.setWindowSize(rl.getMonitorWidth(monitor), rl.getMonitorHeight(monitor));
-    rl.toggleFullscreen();
+    if (builtin.os.tag != .wasi and builtin.os.tag != .emscripten) {
+        const monitor = rl.getCurrentMonitor();
+        rl.setWindowSize(rl.getMonitorWidth(monitor), rl.getMonitorHeight(monitor));
+        rl.toggleFullscreen();
+    } else {
+        const emscripten = std.os.emscripten;
+
+        const width = emscripten.emscripten_run_script_int("innerWidth");
+        const height = emscripten.emscripten_run_script_int("innerHeight");
+
+        rl.setWindowSize(width, height);
+    }
 
     rg.loadStyle("resources/style_dark.rgs");
     rg.setStyle(.dropdownbox, .{ .control = .text_alignment }, @intFromEnum(rg.TextAlignment.left));
@@ -23,6 +32,7 @@ pub fn main() !void {
         }
     } else {
         const emscripten = std.os.emscripten;
+
         emscripten.emscripten_set_main_loop_arg(&app.App.updateEmscripten, &zorting, 0, 1);
     }
 }
