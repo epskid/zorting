@@ -9,20 +9,28 @@ pub const Array = struct {
     inner: [max_capacity]u32,
     len: usize,
 
+    audio_stream: rl.AudioStream,
+
     comparisons: usize,
     accesses: usize,
 
-    pub fn init(len: usize) Self {
+    pub fn init(len: usize) !Self {
         var self: Self = .{
             .colors = [_]rl.Color{.white} ** max_capacity,
             .inner = [_]u32{0} ** max_capacity,
             .len = len,
+            .audio_stream = try rl.loadAudioStream(44100, 8, 1),
             .comparisons = 0,
             .accesses = 0,
         };
+        rl.playAudioStream(self.audio_stream);
         self.ascending();
 
         return self;
+    }
+
+    pub fn deinit(self: *Self) void {
+        rl.unloadAudioStream(self.audio_stream);
     }
 
     pub fn resetColors(self: *Self) void {

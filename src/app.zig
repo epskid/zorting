@@ -17,10 +17,14 @@ pub const App = struct {
         return .{
             .algorithm = 0,
             .sorting = false,
-            .arr = array.Array.init(10),
+            .arr = try array.Array.init(10),
             .delay_microseconds = 1,
             .step_timer = try std.time.Timer.start(),
         };
+    }
+
+    pub fn deinit(self: *Self) void {
+        self.arr.deinit();
     }
 
     pub fn updateEmscripten(self_opaque: ?*anyopaque) callconv(.C) void {

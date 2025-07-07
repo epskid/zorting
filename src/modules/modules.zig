@@ -1,4 +1,5 @@
 const array = @import("../array.zig");
+const zoop = @import("zoop.zig");
 
 const modules = struct {
     // bubblelikes
@@ -69,13 +70,22 @@ pub fn deinit() void {
 }
 
 pub fn step(arr: *array.Array) bool {
+    if (zoop.going) {
+        const done = zoop.step(arr);
+        zoop.going = !done;
+        return done;
+    }
+
     if (working_on) |module_index| {
         inline for (decls, 0..) |decl, idx| {
             if (idx == module_index) {
                 const module = @field(modules, decl.name);
                 const done = module.step(arr);
-                if (done) deinit();
-                return done;
+                if (done) {
+                    deinit();
+                    zoop.init();
+                }
+                return false;
             }
         }
         unreachable;

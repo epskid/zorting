@@ -5,14 +5,14 @@ pub fn main() !void {
     rl.setConfigFlags(.{ .window_resizable = true });
     rl.initWindow(640, 480, "ZORTING");
     defer rl.closeWindow();
+    rl.initAudioDevice();
+    defer rl.closeAudioDevice();
 
     if (builtin.os.tag != .wasi and builtin.os.tag != .emscripten) {
         const monitor = rl.getCurrentMonitor();
         rl.setWindowSize(rl.getMonitorWidth(monitor), rl.getMonitorHeight(monitor));
         rl.toggleFullscreen();
     } else {
-        const emscripten = std.os.emscripten;
-
         const width = emscripten.emscripten_run_script_int("innerWidth");
         const height = emscripten.emscripten_run_script_int("innerHeight");
 
@@ -24,6 +24,7 @@ pub fn main() !void {
     rg.setStyle(.dropdownbox, .{ .control = .text_padding }, 5);
 
     var zorting = try app.App.init();
+    defer zorting.deinit();
     defer modules.deinit();
 
     if (builtin.os.tag != .wasi and builtin.os.tag != .emscripten) {
@@ -31,8 +32,6 @@ pub fn main() !void {
             try zorting.update();
         }
     } else {
-        const emscripten = std.os.emscripten;
-
         emscripten.emscripten_set_main_loop_arg(&app.App.updateEmscripten, &zorting, 2000, 1);
     }
 }
@@ -41,3 +40,4 @@ const std = @import("std");
 const builtin = @import("builtin");
 const rl = @import("raylib");
 const rg = @import("raygui");
+const emscripten = std.os.emscripten;
