@@ -33,7 +33,7 @@ pub fn main() !void {
     } else {
         const emscripten = std.os.emscripten;
 
-        emscripten.emscripten_set_main_loop_arg(&app.App.updateEmscripten, &zorting, 0, 1);
+        emscripten.emscripten_set_main_loop_arg(&app.App.updateEmscripten, &zorting, 2000, 1);
     }
 }
 
