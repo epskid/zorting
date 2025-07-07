@@ -16,6 +16,9 @@ const modules = struct {
     pub const gnome = @import("gnome.zig");
     pub const shell = @import("shell.zig");
 
+    // mergelikes
+    pub const bitonic = @import("bitonic.zig");
+
     // evil hell section for evil algorithms
     pub const bogo = @import("bogo.zig");
 };

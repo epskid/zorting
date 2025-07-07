@@ -1,6 +1,6 @@
 const array = @import("../array.zig");
 
-var index: usize = 1;
+var index: usize = 0;
 
 pub fn init(_: *const array.Array) !void {
     index = 1;
