@@ -1,3 +1,6 @@
+// i don't know how the hell this one works...
+// https://stackoverflow.com/a/73158391
+
 const array = @import("../array.zig");
 
 var i: usize = 0;
