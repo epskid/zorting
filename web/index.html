@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en-us">
     <head>
         <meta charset="utf-8" />
@@ -8,11 +8,13 @@
             body {
                 margin: 0;
                 padding: 0;
+                overflow: hidden;
             }
 
             #canvas {
                 border: 0px none;
-                image-rendering: pixelated; image-rendering: crisp-edges;
+                image-rendering: pixelated;
+                image-rendering: crisp-edges;
             }
 
             #clickwall {
@@ -23,7 +25,7 @@
                 z-index: 1000;
             }
 
-            #clickwall>p {
+            #clickwall > p {
                 font-family: monospace;
                 font-weight: bold;
                 position: absolute;
@@ -35,7 +37,12 @@
         </style>
     </head>
     <body>
-        <div id="clickwall" onclick="loadIndex(); document.body.removeChild(this)"><p>[click anywhere to begin]</p></div>
+        <div
+            id="clickwall"
+            onclick="loadIndex(); document.body.removeChild(this)"
+        >
+            <p>[click anywhere to begin]</p>
+        </div>
         <canvas
             class="emscripten"
             id="canvas"
@@ -51,11 +58,19 @@
             }
 
             // https://github.com/emscripten-core/emscripten/issues/6764#issuecomment-401973958
-            var canvasElement = document.getElementById('canvas');
+            var canvasElement = document.getElementById("canvas");
             var originalCanvasGetContext = canvasElement.getContext;
-            canvasElement.getContext = function(contextType, contextAttributes) {
-                if (contextAttributes) contextAttributes.imageSmoothingEnabled = false;
-                return originalCanvasGetContext.call(this, contextType, contextAttributes);
+            canvasElement.getContext = function (
+                contextType,
+                contextAttributes,
+            ) {
+                if (contextAttributes)
+                    contextAttributes.imageSmoothingEnabled = false;
+                return originalCanvasGetContext.call(
+                    this,
+                    contextType,
+                    contextAttributes,
+                );
             };
 
             var Module = {
@@ -75,7 +90,7 @@
                         e
                     );
                 })(),
-                totalDependencies: 0
+                totalDependencies: 0,
             };
         </script>
     </body>
