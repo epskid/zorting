@@ -13,7 +13,7 @@ pub const AudioManager = struct {
         };
         for (&self.range, 0..) |*snd, i| {
             snd.* = rl.loadSoundAlias(self.sound);
-            rl.setSoundPitch(snd.*, 1 + @as(f32, @floatFromInt(i)) / @as(f32, @floatFromInt(array.max_capacity)));
+            rl.setSoundPitch(snd.*, 1.2 + @as(f32, @floatFromInt(i)) / @as(f32, @floatFromInt(array.max_capacity)));
         }
 
         return self;

@@ -16,33 +16,9 @@
                 image-rendering: pixelated;
                 image-rendering: crisp-edges;
             }
-
-            #clickwall {
-                position: absolute;
-                width: 100vw;
-                height: 100vh;
-                background: black;
-                z-index: 1000;
-            }
-
-            #clickwall > p {
-                font-family: monospace;
-                font-weight: bold;
-                position: absolute;
-                color: white;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-            }
         </style>
     </head>
     <body>
-        <div
-            id="clickwall"
-            onclick="loadIndex(); document.body.removeChild(this)"
-        >
-            <p>[click anywhere to begin]</p>
-        </div>
         <canvas
             class="emscripten"
             id="canvas"
@@ -50,13 +26,6 @@
             tabindex="-1"
         ></canvas>
         <script>
-            function loadIndex() {
-                const script = document.createElement("script");
-                script.src = "./index.js";
-                script.async = true;
-                document.body.appendChild(script);
-            }
-
             // https://github.com/emscripten-core/emscripten/issues/6764#issuecomment-401973958
             var canvasElement = document.getElementById("canvas");
             var originalCanvasGetContext = canvasElement.getContext;
@@ -93,5 +62,6 @@
                 totalDependencies: 0,
             };
         </script>
+        {{{ SCRIPT }}}
     </body>
 </html>

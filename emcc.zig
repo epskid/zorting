@@ -4,7 +4,7 @@ const std = @import("std");
 const builtin = @import("builtin");
 
 const emccOutputDir = "zig-out" ++ std.fs.path.sep_str ++ "htmlout" ++ std.fs.path.sep_str;
-const emccOutputFile = "index.js";
+const emccOutputFile = "index.html";
 pub fn emscriptenRunStep(b: *std.Build) !*std.Build.Step.Run {
     // If compiling on windows , use emrun.bat.
     const emrunExe = switch (builtin.os.tag) {
@@ -15,17 +15,9 @@ pub fn emscriptenRunStep(b: *std.Build) !*std.Build.Step.Run {
     defer b.allocator.free(emrun_run_arg);
 
     if (b.sysroot == null) {
-        emrun_run_arg = try std.fmt.bufPrint(
-            emrun_run_arg,
-            "{s}",
-            .{ emrunExe }
-        );
+        emrun_run_arg = try std.fmt.bufPrint(emrun_run_arg, "{s}", .{emrunExe});
     } else {
-        emrun_run_arg = try std.fmt.bufPrint(
-            emrun_run_arg,
-            "{s}" ++ std.fs.path.sep_str ++ "{s}",
-            .{ b.sysroot.?, emrunExe }
-        );
+        emrun_run_arg = try std.fmt.bufPrint(emrun_run_arg, "{s}" ++ std.fs.path.sep_str ++ "{s}", .{ b.sysroot.?, emrunExe });
     }
 
     const run_cmd = b.addSystemCommand(&[_][]const u8{ emrun_run_arg, emccOutputDir ++ emccOutputFile });
@@ -83,11 +75,7 @@ pub fn linkWithEmscripten(
     defer b.allocator.free(emcc_run_arg);
 
     if (b.sysroot == null) {
-        emcc_run_arg = try std.fmt.bufPrint(
-            emcc_run_arg,
-            "{s}",
-            .{ emccExe }
-        );
+        emcc_run_arg = try std.fmt.bufPrint(emcc_run_arg, "{s}", .{emccExe});
     } else {
         emcc_run_arg = try std.fmt.bufPrint(
             emcc_run_arg,
@@ -109,7 +97,7 @@ pub fn linkWithEmscripten(
         emcc_command.addFileArg(item.getEmittedBin());
         emcc_command.step.dependOn(&item.step);
     }
-    // This puts the file in zig-out/htmlout/index.js.
+    // This puts the file in zig-out/htmlout/index.html.
     emcc_command.step.dependOn(&mkdir_command.step);
     emcc_command.addArgs(&[_][]const u8{
         "-o",
@@ -120,8 +108,8 @@ pub fn linkWithEmscripten(
         "-sFULL-ES3=1",
         "-sUSE_GLFW=3",
         "-sEVAL_CTORS",
+        "-sSTACK_SIZE=256kb",
         "-O3",
-        "-fsanitize=undefined",
         "-flto",
     });
     return emcc_command;

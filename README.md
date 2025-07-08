@@ -1,5 +1,5 @@
 # zorting
-you know those sorting algorithm visualizations on youtube? this is just that but worse.
+you know those sorting algorithm visualizations on youtube? this is just that but worse. don't ask about the audio.
 
 <details>
 <summary>demo (compressed into oblivion) (old version)</summary>

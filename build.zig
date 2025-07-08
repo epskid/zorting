@@ -5,12 +5,8 @@ const emcc = @import("emcc.zig");
 pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
-    
-    const raylib_dep = b.dependency("raylib_zig", .{
-        .target = target,
-        .optimize = optimize,
-        .linux_display_backend = .X11
-    });
+
+    const raylib_dep = b.dependency("raylib_zig", .{ .target = target, .optimize = optimize, .linux_display_backend = .X11 });
 
     const raylib = raylib_dep.module("raylib");
     const raygui = raylib_dep.module("raygui");
@@ -24,16 +20,16 @@ pub fn build(b: *std.Build) !void {
         exe_lib.root_module.addImport("raygui", raygui);
 
         const link_step = try emcc.linkWithEmscripten(b, &[_]*std.Build.Step.Compile{ exe_lib, raylib_artifact });
-        link_step.addArg("--emrun");
+        link_step.addArg("--shell-file");
+        link_step.addArg("src/shell.html");
         link_step.addArg("--embed-file");
         link_step.addArg("resources/");
 
         b.getInstallStep().dependOn(&link_step.step);
-        b.installDirectory(.{
-            .install_dir = .{ .custom = "htmlout" },
-            .source_dir = .{ .src_path = .{ .owner = b, .sub_path = "web" } },
-            .install_subdir = ""
-        });
+        const run_step = try rlz.emcc.emscriptenRunStep(b);
+        run_step.step.dependOn(&link_step.step);
+        const run_option = b.step("run", "Run zorting");
+        run_option.dependOn(&run_step.step);
 
         return;
     }
