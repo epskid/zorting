@@ -1,3 +1,5 @@
+const audio = @import("audio.zig");
+
 pub const max_capacity: usize = if (builtin.os.tag != .wasi and builtin.os.tag != .emscripten) 2000 else 1000;
 
 var prng = std.Random.DefaultPrng.init(4); // chosen by fair dice roll; guaranteed to be random (https://xkcd.com/221/)
@@ -8,9 +10,7 @@ pub const Array = struct {
     colors: [max_capacity]rl.Color,
     inner: [max_capacity]u32,
     len: usize,
-
-    audio_stream: rl.AudioStream,
-
+    audio_manager: audio.AudioManager,
     comparisons: usize,
     accesses: usize,
 
@@ -19,18 +19,17 @@ pub const Array = struct {
             .colors = [_]rl.Color{.white} ** max_capacity,
             .inner = [_]u32{0} ** max_capacity,
             .len = len,
-            .audio_stream = try rl.loadAudioStream(44100, 8, 1),
+            .audio_manager = try audio.AudioManager.init(),
             .comparisons = 0,
             .accesses = 0,
         };
-        rl.playAudioStream(self.audio_stream);
         self.ascending();
 
         return self;
     }
 
     pub fn deinit(self: *Self) void {
-        rl.unloadAudioStream(self.audio_stream);
+        self.audio_manager.deinit();
     }
 
     pub fn resetColors(self: *Self) void {
@@ -56,7 +55,7 @@ pub const Array = struct {
             rl.drawRectangle(@intFromFloat(x), rl.getScreenHeight() - height, @intFromFloat(@ceil(width_scale)), height, self.colors[i]);
         }
 
-        rl.drawText(rl.textFormat("comparisons: %i\naccesses: %i\n(hover for options)", .{ self.comparisons, self.accesses }), 10, 10, 16, .gray);
+        rl.drawText(rl.textFormat("comparisons: %i\naccesses: %i\n(hover for options)", .{ self.comparisons, self.accesses }), 10, 10, 20, .gray);
     }
 
     pub fn shuffle(self: *Self) void {
@@ -75,6 +74,7 @@ pub const Array = struct {
             std.builtin.panic.outOfBounds(idx, self.len);
         }
 
+        self.audio_manager.playIndex(self.inner[idx] - 1, self.len);
         self.accesses += 1;
         self.colors[idx] = .red;
         return self.inner[idx];

@@ -90,7 +90,7 @@ pub const App = struct {
 
     inline fn drawArrayStats(self: *const Self) void {
         const text = rl.textFormat("comparisons: %i\naccesses: %i", .{ self.arr.comparisons, self.arr.accesses });
-        rl.drawText(text, 10, 50, 14, .white);
+        rl.drawText(text, 10, 55, 10, .white);
     }
 
     inline fn updateDelaySlider(self: *Self) void {
