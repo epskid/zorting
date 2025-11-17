@@ -24,7 +24,7 @@ pub fn build(b: *std.Build) !void {
     if (target.query.os_tag == .emscripten) {
         const emsdk = rlz.emsdk;
         const wasm = b.addLibrary(.{
-            .name = "zorting",
+            .name = "index",
             .root_module = exe_mod,
         });
         const install_dir: std.Build.InstallDir = .{ .custom = "web" };
