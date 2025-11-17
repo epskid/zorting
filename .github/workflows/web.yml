@@ -6,10 +6,6 @@ on:
       - src/**
   workflow_dispatch:
 
-env:
-  EM_VERSION: 3.1.50
-  EM_CACHE_FOLDER: "emsdk-cache"
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,13 +14,9 @@ jobs:
       - uses: mlugg/setup-zig@v2
         with:
           version: 0.15.2
-      - name: setup cache
-        id: cache-system-libraries
-        uses: actions/cache@v4
-        with:
-          path: ${{env.EM_CACHE_FOLDER}}
-          key: ${{env.EM_VERSION}}-${{ runner.os }}
-      - name: compile with emsdk
+      - name: set up emsdk
+        run: zig fetch --save=emsdk git+https://github.com/emscripten-core/emsdk#4.0.9
+      - name: compile
         id: build
         run: zig build --release=fast -Dtarget=wasm32-emscripten
       - name: upload static files
