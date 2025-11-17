@@ -11,13 +11,13 @@ var j: usize = 0;
 
 pub fn init(arr: *const array.Array) !void {
     stack = try std.ArrayList(LRPair).initCapacity(std.heap.c_allocator, arr.len);
-    try stack.append(.{ .left = 0, .right = arr.len - 1 });
+    try stack.append(std.heap.c_allocator, .{ .left = 0, .right = arr.len - 1 });
     i = null;
     j = 0;
 }
 
 pub fn deinit() void {
-    stack.deinit();
+    stack.deinit(std.heap.c_allocator);
 }
 
 fn partition(arr: *array.Array, lo: usize, hi: usize) ?usize {
@@ -68,12 +68,12 @@ pub fn step(arr: *array.Array) bool {
         _ = stack.pop();
         i = null;
 
-        stack.append(.{
+        stack.append(std.heap.c_allocator, .{
             .left = pivot + 1,
             .right = hi,
         }) catch unreachable;
         if (pivot != 0) {
-            stack.append(.{
+            stack.append(std.heap.c_allocator, .{
                 .left = lo,
                 .right = pivot - 1,
             }) catch unreachable;

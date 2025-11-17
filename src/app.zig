@@ -27,7 +27,7 @@ pub const App = struct {
         self.arr.deinit();
     }
 
-    pub fn updateEmscripten(self_opaque: ?*anyopaque) callconv(.C) void {
+    pub fn updateEmscripten(self_opaque: ?*anyopaque) callconv(.c) void {
         var self = @as(*Self, @ptrCast(@alignCast(self_opaque.?)));
         self.update() catch {};
     }

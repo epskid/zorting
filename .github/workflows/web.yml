@@ -17,25 +17,21 @@ jobs:
       - uses: actions/checkout@v4
       - uses: mlugg/setup-zig@v2
         with:
-          version: 0.14.1
+          version: 0.15.2
       - name: setup cache
         id: cache-system-libraries
         uses: actions/cache@v4
         with:
           path: ${{env.EM_CACHE_FOLDER}}
           key: ${{env.EM_VERSION}}-${{ runner.os }}
-      - uses: mymindstorm/setup-emsdk@v14
-        with:
-          version: ${{env.EM_VERSION}}
-          actions-cache-folder: ${{env.EM_CACHE_FOLDER}}
       - name: compile with emsdk
         id: build
-        run: zig build --release=fast -Dtarget=wasm32-emscripten --sysroot emsdk-cache/emsdk-main/upstream/emscripten
+        run: zig build --release=fast -Dtarget=wasm32-emscripten
       - name: upload static files
         id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
-          path: zig-out/htmlout
+          path: zig-out/web
   deploy:
     needs: build
     permissions:
